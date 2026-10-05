@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Gemeinfrei">
+  <meta name="theme-color" content="#f2f2f7">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+  <link rel="icon" href="./icons/icon-192.png" type="image/png">
+  <title>Gemeinfrei</title>
+  <style>
+    :root {
+      --bg: #f2f2f7;
+      --card: #ffffff;
+      --ink: #1c1c1e;
+      --muted: #6e6e73;
+      --line: #e5e5ea;
+      --tint: #0b5e45;
+      --tint-press: #084833;
+      --seal: #143d2e;
+      --danger: #b42318;
+      --shadow: 0 1px 2px rgba(28, 28, 30, 0.06);
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    body {
+      padding:
+        calc(var(--safe-top) + 18px)
+        16px
+        calc(var(--safe-bottom) + 28px);
+    }
+
+    .app {
+      width: min(100%, 430px);
+      margin: 0 auto;
+    }
+
+    header.hero {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .seal {
+      width: 64px;
+      height: 64px;
+      flex: none;
+      border-radius: 18px;
+      background:
+        radial-gradient(circle at 30% 25%, #2f7a5d, var(--seal) 62%);
+      color: #f6f3ea;
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      font-size: 18px;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 34px;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      font-weight: 700;
+    }
+
+    .lede {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.35;
+    }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      padding: 3px;
+      background: #e7e7ed;
+      border-radius: 12px;
+      margin-bottom: 16px;
+    }
+
+    .tabs button {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      color: var(--ink);
+      min-height: 36px;
+      border-radius: 9px;
+      font: inherit;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .tabs button[aria-selected="true"] {
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+
+    .panel[hidden] { display: none; }
+
+    .card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+      margin-bottom: 12px;
+    }
+
+    .card h2 {
+      margin: 0 0 8px;
+      font-size: 17px;
+      letter-spacing: -0.01em;
+    }
+
+    p {
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.45;
+    }
+
+    .card p + p { margin-top: 10px; }
+
+    .actions {
+      display: grid;
+      gap: 10px;
+      margin: 4px 0 16px;
+    }
+
+    .actions-after { margin-top: 12px; }
+
+    button.action, a.action {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 50px;
+      padding: 0 16px;
+      border-radius: 14px;
+      border: 0;
+      text-decoration: none;
+      font: inherit;
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    button.action { width: 100%; }
+
+    .primary {
+      background: var(--tint);
+      color: #fff;
+    }
+
+    .primary:active { background: var(--tint-press); }
+
+    .secondary {
+      background: var(--card);
+      color: var(--tint);
+      box-shadow: var(--shadow);
+    }
+
+    .secondary:active { background: #f7f7f8; }
+
+    .hint {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+      margin: 0 4px 8px;
+    }
+
+    .install .hint { margin: 10px 0 0; }
+
+    .steps {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .steps li {
+      margin: 6px 0;
+      font-size: 16px;
+      line-height: 1.4;
+    }
+
+    .stats {
+      display: grid;
+      gap: 10px;
+    }
+
+    .stats img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 12px;
+      background: #fff;
+    }
+
+    .stats .missing {
+      min-height: 92px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+      border: 1px dashed var(--line);
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .sheet {
+      position: fixed;
+      inset: 0;
+      background: rgba(28, 28, 30, 0.38);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      z-index: 5;
+    }
+
+    .sheet[hidden] { display: none; }
+
+    .sheet-card {
+      width: min(100%, 460px);
+      max-height: min(88vh, 760px);
+      background: #fff;
+      border-radius: 18px 18px 0 0;
+      padding: 10px 16px calc(var(--safe-bottom) + 16px);
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.12);
+    }
+
+    .grabber {
+      width: 36px;
+      height: 5px;
+      border-radius: 99px;
+      background: #d1d1d6;
+      margin: 4px auto 12px;
+    }
+
+    .sheet-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .sheet-head h2 {
+      margin: 0;
+      font-size: 20px;
+      letter-spacing: -0.02em;
+    }
+
+    .text-button {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      color: var(--tint);
+      font: inherit;
+      font-size: 17px;
+      font-weight: 600;
+      min-height: 44px;
+      padding: 0 2px;
+    }
+
+    .license {
+      overflow: auto;
+      white-space: pre-wrap;
+      font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.45;
+      margin: 0 0 12px;
+      padding: 12px;
+      background: #f6f6f8;
+      border-radius: 12px;
+      color: #2c2c2e;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: calc(var(--safe-bottom) + 24px);
+      transform: translateX(-50%);
+      background: #1c1c1e;
+      color: #fff;
+      border-radius: 999px;
+      padding: 10px 16px;
+      font-size: 15px;
+      font-weight: 600;
+      z-index: 6;
+    }
+
+    .toast[hidden] { display: none; }
+
+    @media (min-width: 700px) {
+      body {
+        display: grid;
+        place-items: center;
+        min-height: 100vh;
+      }
+
+      .app {
+        width: 390px;
+        min-height: 720px;
+        background: var(--bg);
+        border-radius: 36px;
+        padding: 28px 16px 24px;
+        box-shadow:
+          0 0 0 12px #1c1c1e,
+          0 24px 60px rgba(0, 0, 0, 0.18);
+      }
+    }
+
+    @media (display-mode: standalone) {
+      body {
+        display: block;
+      }
+
+      .app {
+        width: min(100%, 430px);
+        min-height: 0;
+        border-radius: 0;
+        box-shadow: none;
+        padding: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="hero">
+      <div class="seal" aria-hidden="true">PD</div>
+      <div>
+        <h1>Gemeinfrei</h1>
+        <p class="lede">App für das iPhone</p>
+      </div>
+    </header>
+
+    <section class="card install" id="install">
+      <h2>Auf dem iPhone öffnen</h2>
+      <ol class="steps">
+        <li>Diese Seite in Safari öffnen.</li>
+        <li>Unten auf das Teilen-Symbol tippen.</li>
+        <li>„Zum Home-Bildschirm“ wählen und auf „Hinzufügen“ tippen.</li>
+      </ol>
+      <p class="hint">Danach startet Gemeinfrei vom Home-Bildschirm, ohne Safari-Leiste.</p>
+    </section>
+
+    <div class="tabs" role="tablist" aria-label="Ansichten">
+      <button type="button" id="tab-dedication" role="tab" aria-selected="true" aria-controls="panel-dedication">Widmung</button>
+      <button type="button" id="tab-profile" role="tab" aria-selected="false" aria-controls="panel-profile">Profil</button>
+    </div>
+
+    <section id="panel-dedication" class="panel" role="tabpanel" aria-labelledby="tab-dedication">
+      <article class="card">
+        <h2>Öffentliche Domäne</h2>
+        <p>Gemeinfrei zeigt die Unlicense-Widmung aus diesem Archiv. Der Text bleibt auf Englisch, weil das die Widmung selbst ist.</p>
+      </article>
+      <div class="actions">
+        <button type="button" class="action primary" id="open-license">Volltext lesen</button>
+        <button type="button" class="action secondary" id="copy-license">Lizenz kopieren</button>
+      </div>
+      <p class="hint" id="copy-status" role="status"></p>
+    </section>
+
+    <section id="panel-profile" class="panel" role="tabpanel" aria-labelledby="tab-profile" hidden>
+      <article class="card">
+        <h2>Profil</h2>
+        <p>Die Karten stammen aus der README dieses Archivs. Das Portfolio öffnet sich in Safari.</p>
+      </article>
+      <div class="stats" id="stats"></div>
+      <div class="actions actions-after">
+        <a class="action primary" id="portfolio" href="https://observeroftime.github.io/portfolio/">Portfolio öffnen</a>
+      </div>
+    </section>
+  </main>
+
+  <div class="sheet" id="sheet" hidden>
+    <div class="sheet-card" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+      <div class="grabber" aria-hidden="true"></div>
+      <div class="sheet-head">
+        <h2 id="sheet-title">Unlicense</h2>
+        <button type="button" class="text-button" id="close-sheet">Schließen</button>
+      </div>
+      <pre class="license" id="license-text"></pre>
+      <button type="button" class="action primary" id="copy-from-sheet">Lizenz kopieren</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" hidden>Lizenz kopiert</div>
+
+  <script>
+    var LICENSE = [
+      "This is free and unencumbered software released into the public domain.",
+      "",
+      "Anyone is free to copy, modify, publish, use, compile, sell, or",
+      "distribute this software, either in source code form or as a compiled",
+      "binary, for any purpose, commercial or non-commercial, and by any",
+      "means.",
+      "",
+      "In jurisdictions that recognize copyright laws, the author or authors",
+      "of this software dedicate any and all copyright interest in the",
+      "software to the public domain. We make this dedication for the benefit",
+      "of the public at large and to the detriment of our heirs and",
+      "successors. We intend this dedication to be an overt act of",
+      "relinquishment in perpetuity of all present and future rights to this",
+      "software under copyright law.",
+      "",
+      "THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,",
+      "EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF",
+      "MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.",
+      "IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR",
+      "OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,",
+      "ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR",
+      "OTHER DEALINGS IN THE SOFTWARE.",
+      "",
+      "For more information, please refer to <https://unlicense.org>"
+    ].join("\n");
+
+    var STATS = [
+      {
+        alt: "Allgemeine GitHub-Statistik",
+        src: "https://github-stats-extended.vercel.app/api?username=ObserverOfTime&show_icons=true&hide=prs,contribs&show=prs_merged,reviews&theme=gruvbox&hide_title=true&hide_border=true"
+      },
+      {
+        alt: "Verwendete Sprachen",
+        src: "https://github-stats-extended.vercel.app/api/top-langs?username=ObserverOfTime&layout=compact&theme=gruvbox&langs_count=10&exclude_repo=home.files,malspam-analysis&hide_title=true&hide_border=true"
+      }
+    ];
+
+    var sheet = document.getElementById("sheet");
+    var licenseNode = document.getElementById("license-text");
+    var toast = document.getElementById("toast");
+    var copyStatus = document.getElementById("copy-status");
+    var toastTimer = 0;
+
+    licenseNode.textContent = LICENSE;
+
+    function selectTab(name) {
+      var dedication = name === "dedication";
+      document.getElementById("tab-dedication").setAttribute("aria-selected", dedication ? "true" : "false");
+      document.getElementById("tab-profile").setAttribute("aria-selected", dedication ? "false" : "true");
+      document.getElementById("panel-dedication").hidden = !dedication;
+      document.getElementById("panel-profile").hidden = dedication;
+    }
+
+    function openSheet() {
+      sheet.hidden = false;
+      document.getElementById("close-sheet").focus();
+    }
+
+    function closeSheet() {
+      sheet.hidden = true;
+      document.getElementById("open-license").focus();
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.hidden = false;
+      window.clearTimeout(toastTimer);
+      toastTimer = window.setTimeout(function () {
+        toast.hidden = true;
+      }, 1800);
+    }
+
+    function fallbackCopy(text) {
+      var area = document.createElement("textarea");
+      area.value = text;
+      area.setAttribute("readonly", "");
+      area.style.position = "fixed";
+      area.style.left = "-9999px";
+      document.body.appendChild(area);
+      area.select();
+      var ok = false;
+      try {
+        ok = document.execCommand("copy");
+      } catch (error) {
+        ok = false;
+      }
+      document.body.removeChild(area);
+      return ok;
+    }
+
+    function copyLicense() {
+      var done = function (ok) {
+        if (ok) {
+          copyStatus.textContent = "Die Widmung liegt in der Zwischenablage.";
+          showToast("Lizenz kopiert");
+          return;
+        }
+        copyStatus.textContent = "Kopieren ist hier blockiert. Der Volltext lässt sich markieren.";
+        showToast("Bitte Text markieren");
+        openSheet();
+      };
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(LICENSE).then(function () {
+          done(true);
+        }).catch(function () {
+          done(fallbackCopy(LICENSE));
+        });
+        return;
+      }
+      done(fallbackCopy(LICENSE));
+    }
+
+    function renderStats() {
+      var host = document.getElementById("stats");
+      STATS.forEach(function (item) {
+        var image = document.createElement("img");
+        image.alt = item.alt;
+        image.src = item.src;
+        image.addEventListener("error", function () {
+          var note = document.createElement("div");
+          note.className = "missing";
+          note.textContent = item.alt + " konnte nicht geladen werden.";
+          image.replaceWith(note);
+        });
+        host.appendChild(image);
+      });
+    }
+
+    document.getElementById("tab-dedication").addEventListener("click", function () {
+      selectTab("dedication");
+    });
+    document.getElementById("tab-profile").addEventListener("click", function () {
+      selectTab("profile");
+    });
+    document.getElementById("open-license").addEventListener("click", openSheet);
+    document.getElementById("close-sheet").addEventListener("click", closeSheet);
+    document.getElementById("copy-license").addEventListener("click", copyLicense);
+    document.getElementById("copy-from-sheet").addEventListener("click", copyLicense);
+    sheet.addEventListener("click", function (event) {
+      if (event.target === sheet) closeSheet();
+    });
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape" && !sheet.hidden) closeSheet();
+    });
+
+    var standalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+    if (standalone) {
+      document.getElementById("install").hidden = true;
+    }
+
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("./sw.js").catch(function () {});
+    }
+
+    renderStats();
+    document.documentElement.dataset.ready = "true";
+    document.documentElement.dataset.mode = standalone ? "standalone" : "browser";
+  </script>
+</body>
+</html>
